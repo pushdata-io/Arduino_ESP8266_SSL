@@ -2,7 +2,7 @@
     "name": "Pushdata_ESP8266_SSL",
     "keywords": "communication, data, storage, sensors, sensor, iot, esp8266, nodemcu, http, https, ssl",
     "description": "Pushdata.io offers free, ultra-simple time series data storage for your IoT sensors.",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "repository":
     {
       "type": "git",
@@ -10,6 +10,5 @@
     },
     "homepage": "https://pushdata.io",
     "frameworks": "arduino",
-    "platforms": "*",
-    "examples": "examples/*/*.ino"
+    "platforms": "*"
   }
