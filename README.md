@@ -3,6 +3,8 @@
 This client library makes it simple for ESP8266/NodeMCU devices to 
 store time series data using the online service [pushdata.io](https://pushdata.io).
 
+<p align="center"><img src="screenshot.png" alt="pushdata.io" width="400" height="auto"></p>
+
 ## Installation
 
 The simplest way to install the library is by using the Arduino IDE Library Manager - see [this guide](https://www.arduino.cc/en/Guide/Libraries) for more information, or the library manager of [PlatformIO](https://platformio.org). In both cases you can search for "pushdata" and click to install the library so your IDE has access to it.
