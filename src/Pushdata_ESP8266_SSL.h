@@ -119,7 +119,8 @@ class Pushdata_ESP8266_SSL {
             DBGPRINTHLN("BearSSL::WifiClientSecure init");
             BearSSL::WiFiClientSecure client;
             DBGPRINTHLN("BearSSLPublicKey init");
-            BearSSL::PublicKey key;
+            BearSSLPublicKey key;
+            //BearSSL::PublicKey key;
             if (key.parse((uint8_t *)pubkey, strlen(pubkey))) {
                 DBGPRINTHLN("key.parse() succeeded");
             } else {
@@ -133,7 +134,7 @@ class Pushdata_ESP8266_SSL {
             #ifdef DEBUG
             unsigned long startConnect = millis();
             #endif
-            client.setDefaultNoDelay(true);
+            //client.setDefaultNoDelay(true);
             if (!client.connect("pushdata.io", 443)) {
                 Serial.println("Pushdata_ESP8266: Error: failed to connect to pushdata.io:443");
                 char buf[200];
