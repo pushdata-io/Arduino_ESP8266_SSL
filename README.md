@@ -5,7 +5,7 @@ store time series data using the online service [pushdata.io](https://pushdata.i
 
 ## Installation
 
-The simplest way to install the library is by using the Arduino IDE Library Manager - see [this guide] for more information, or the library manager of [PlatformIO](https://platformio.org). In both cases you can search for "pushdata" and click to install the library so your IDE has access to it.
+The simplest way to install the library is by using the Arduino IDE Library Manager - see [this guide](https://www.arduino.cc/en/Guide/Libraries) for more information, or the library manager of [PlatformIO](https://platformio.org). In both cases you can search for "pushdata" and click to install the library so your IDE has access to it.
 
 ## Usage
 
