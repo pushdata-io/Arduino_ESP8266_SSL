@@ -8,7 +8,8 @@ char ssid[] = "MyWiFiNetwork";
 char passwd[] = "MyWiFiPassword";
 
 void setup() {
-  // Pushdata.io authentication using API key. Replace below key with your own key
+  // Pushdata.io authentication using API key. 
+  // (replace below key with your own key)
   pd.setApiKey("h2RtqP7eOl1A34ho2f90");
   pd.addWiFi(ssid, passwd);
 }
@@ -19,10 +20,12 @@ void loop() {
   if (pd.monitorWiFi() != WL_CONNECTED) 
     return;
   // Store the value 4711 once every minute. 
-  // Note that we do not configure a name for the time series here - the Pushdata library will then use 
-  // the ethernet MAC address of the NodeMCU as the time series name. You can change the primary name 
-  // to something else in the Pushdata UI, but the MAC address name will always remain, and function as 
-  // an alias name (so your device can continue sending data to it without any kind of reconfiguration)
+  // Note that we do not configure a name for the time series here - the 
+  // Pushdata library will then use the ethernet MAC address of the 
+  // NodeMCU as the time series name. You can change the primary name 
+  // to something else in the Pushdata UI, but the MAC address name will
+  // always remain, and function as an alias name (so your device can 
+  // continue sending data to it without any kind of reconfiguration)
   if (millis() % 60000 == 0) {
     pd.send(4711);
   }
