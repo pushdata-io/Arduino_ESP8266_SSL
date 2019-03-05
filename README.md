@@ -3,7 +3,7 @@
 This client library makes it simple for ESP8266/NodeMCU devices to 
 store time series data using the online service [pushdata.io](https://pushdata.io).
 
-<p align="center"><img src="screenshot.png" alt="pushdata.io" width="400" height="auto"></p>
+<p align="center"><img src="screenshot.png" alt="pushdata.io" width="600" height="auto"></p>
 
 ## Installation
 
