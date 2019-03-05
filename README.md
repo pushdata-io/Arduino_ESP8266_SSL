@@ -41,5 +41,7 @@ void loop() {
 }
 ```
 
+Check out the [examples](https://github.com/pushdata-io/Arduino_ESP8266_SSL/tree/master/examples) folder also, for more information on how to use the library.
+
 
 
