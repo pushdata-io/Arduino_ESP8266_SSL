@@ -1,7 +1,7 @@
 # Arduino_ESP8266_SSL
 
-This client library makes it simple for ESP8266/NodeMCU devices to 
-store time series data using the online service [pushdata.io](https://pushdata.io).
+This client library makes it simple for ESP8266/NodeMCU devices to store time series data 
+(e.g. smart sensor readings) using the online service [pushdata.io](https://pushdata.io).
 
 <p align="center"><img src="screenshot.png" alt="pushdata.io" width="600" height="auto"></p>
 
