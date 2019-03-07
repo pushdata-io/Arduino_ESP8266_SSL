@@ -7,7 +7,18 @@ This client library makes it simple for ESP8266/NodeMCU devices to store time se
 
 ## Installation
 
-The simplest way to install the library is by using the Arduino IDE Library Manager - see [this guide](https://www.arduino.cc/en/Guide/Libraries) for more information, or the library manager of [PlatformIO](https://platformio.org). In both cases you can search for "pushdata" and click to install the library so your IDE has access to it.
+### Installing for the Arduino IDE
+
+- Download the ZIP archive from the [latest release](https://github.com/pushdata-io/Arduino_ESP8266_SSL/releases/latest)
+
+- Open the Arduino IDE and click Sketch->Include Library->Add .ZIP library in the menu
+
+- Choose the downloaded ZIP file and you're done!
+
+### Installing for the PlatformIO IDE
+
+- Use the [PlatformIO](https://platformio.org) library manager and search for "pushdata", then click to install
+
 
 ## Usage
 
