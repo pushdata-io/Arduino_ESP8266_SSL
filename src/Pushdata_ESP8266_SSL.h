@@ -119,8 +119,14 @@ class Pushdata_ESP8266_SSL {
             DBGPRINTHLN("BearSSL::WifiClientSecure init");
             BearSSL::WiFiClientSecure client;
             DBGPRINTHLN("BearSSLPublicKey init");
-            BearSSLPublicKey key;
-            //BearSSL::PublicKey key;
+            //
+            // Instantiate a BearSSL PublicKey class. 
+            BearSSL::PublicKey key;
+            // If you're using PlatformIO and encounter problems compiling the above line, try 
+            // replacing it with the line below that says "BearSSLPublicKey key;"
+            //
+            // BearSSLPublicKey key;
+            //
             if (key.parse((uint8_t *)pubkey, strlen(pubkey))) {
                 DBGPRINTHLN("key.parse() succeeded");
             } else {
