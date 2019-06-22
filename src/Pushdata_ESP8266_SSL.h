@@ -66,39 +66,69 @@ class Pushdata_ESP8266_SSL {
         }
         // Send data without a TS name, which uses its ethernet MAC address as the name
         int send(float value) {
-            static char tsname[20];
-            uint8_t mac[6];
-            WiFi.macAddress(mac);
-            sprintf(tsname, "---%02x%02x%02x%02x%02x%02x__", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-            DBGPRINTH("Sending to TS "); DBGPRINTLN(tsname);
-            int ret = _send(tsname, value, NULL, 0);
+            int ret = _send(NULL, value, NULL, NULL, 0);
             return ret;
         }
-        // int argument version
+        // int value version (will be converted to float)
         int send(int value) {
-            return send((float)value);
+            return _send(NULL, (float)value, NULL, NULL, 0);
         }
         // Store data in a specific TS
         int send(const char *tsname, float value) {
-            int ret = _send(tsname, value, NULL, 0);
-            return ret;
+            return _send(tsname, value, NULL, NULL, 0);
         }
-        // int argument version
+        // int value version
         int send(const char *tsname, int value) {
-            return send(tsname, (float)value);
+            return _send(tsname, (float)value, NULL, NULL, 0);
+        }
+        // send with timestamp as string, in Unix EPOCH or RFC3336 format
+        int send(const char *tsname, float value, const char *timestamp) {
+            return _send(tsname, value, timestamp, NULL, 0);
+        }
+        // and int value version
+        int send(const char *tsname, int value, const char *timestamp) {
+            return _send(tsname, (float)value, timestamp, NULL, 0);
+        }
+        // send with timestamp as integer Unix EPOCH 
+        int send(const char *tsname, float value, long timestamp) {
+            static char ts[12];
+            sprintf(ts, "%ld", timestamp);
+            return _send(tsname, value, ts, NULL, 0);
+        }
+        // and int value version
+        int send(const char *tsname, int value, long timestamp) {
+            static char ts[12];
+            sprintf(ts, "%ld", timestamp);
+            return _send(tsname, (float)value, ts, NULL, 0);
         }
         // Store data in a specific TS and with tags
         // **tags = { "key1", "val1", "key2", "val2" ... }
-        int send(const char *tsname, float value, const char **tags, int numtags) {
-            int ret = _send(tsname, value, tags, numtags);
-            return ret;
+        // Use null timestamp and/or tsname to get the defaults
+        int send(const char *tsname, float value, const char *timestamp, const char **tags, int numtags) {
+            return _send(tsname, value, timestamp, tags, numtags);
         }
-        // int argument version
-        int send(const char *tsname, int value, const char **tags, int numtags) {
-            return send(tsname, (float)value, tags, numtags);
+        // int value version
+        int send(const char *tsname, int value, const char *timestamp, const char **tags, int numtags) {
+            return _send(tsname, (float)value, timestamp, tags, numtags);
+        }
+        // Store data in a specific TS and with tags
+        // **tags = { "key1", "val1", "key2", "val2" ... }
+        // Use null timestamp and/or tsname to get the defaults
+        // integer timestamp version
+        int send(const char *tsname, float value, long timestamp, const char **tags, int numtags) {
+            static char ts[12];
+            sprintf(ts, "%ld", timestamp);
+            return _send(tsname, value, ts, tags, numtags);
+        }
+        // int value version
+        int send(const char *tsname, int value, long timestamp, const char **tags, int numtags) {
+            static char ts[12];
+            sprintf(ts, "%ld", timestamp);
+            return _send(tsname, (float)value, ts, tags, numtags);
         }
         // Function that does the actual sending
-        int _send(const char *tsname, float value, const char **tags, int numtags) {
+        int _send(const char *tsname, float value, const char *timestamp, const char **tags, int numtags) {
+            static char _tsname[51];
             const char pubkey[] = "-----BEGIN PUBLIC KEY-----\n"
                 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1hXt5g1q0NbHAQwG4w6T\n"
                 "w9YtviEJytQjM+fBsMeUEol1d8qOqVgF6aiOthYJM1yKytKQ488tAIXdx7w4dM77\n"
@@ -112,6 +142,16 @@ class Pushdata_ESP8266_SSL {
                 Serial.println("Pushdata_ESP8266_SSL: Error: you must set either an email or an api key");
                 return 0;
             }
+            if (tsname == NULL) {
+                uint8_t mac[6];
+                WiFi.macAddress(mac);
+                sprintf(_tsname, "---%02x%02x%02x%02x%02x%02x__", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+                DBGPRINTH("Sending to TS "); DBGPRINTLN(tsname);
+            } else {
+                strncpy(_tsname, tsname, 50);
+                _tsname[50] = '\0';  // only the paranoid survive
+            }
+
             // Set CPU frequency to either 80 or 160 Mhz
             // 160 is default, unless user has called setCPUSpeed()
             // We do this because SSL handshake time is over 3 seconds at 80 Mhz (~2 secs at 160).
@@ -153,16 +193,21 @@ class Pushdata_ESP8266_SSL {
             }
             DBGPRINTH("connect took "); DBGPRINT(millis()-startConnect); DBGPRINTLN(" ms");
             DBGPRINTHLN("Connected to pushdata.io:443");
-            static char packetBuf[250];
-            memset((void *)packetBuf, 0, 250);
-            sprintf(packetBuf, "{\"name\":\"%s\",\"points\":[{\"value\":%f}]", tsname, value);
+            static char packetBuf[300];
+            memset((void *)packetBuf, 0, 300);
+            if (timestamp == NULL) {
+                sprintf(packetBuf, "{\"name\":\"%s\",\"points\":[{\"value\":%f}]", _tsname, value);
+            } else {
+                sprintf(packetBuf, "{\"name\":\"%s\",\"points\":[{\"time\":\"%s\",\"value\":%f}]", _tsname, timestamp, value);
+            }
+
             if (numtags > 0) {
                 int l;
                 strcat(packetBuf, ",\"tags\":{");
                 for (int i = 0; i < numtags; i++) {
                     l = strlen(packetBuf);
-                    if ((strlen(tags[i*2])+strlen(tags[i*2+1])+8) >= 200) {
-                        Serial.println("Pushdata_ESP8266: Error: packet size exceeded 200 bytes including tags");
+                    if ((strlen(tags[i*2])+strlen(tags[i*2+1])+8) >= 250) {
+                        Serial.println("Pushdata_ESP8266: Error: packet size exceeded 250 bytes including tags");
                         return 0;
                     }
                     sprintf(packetBuf+l, "\"%s\":\"%s\",", tags[i*2], tags[i*2+1]);
