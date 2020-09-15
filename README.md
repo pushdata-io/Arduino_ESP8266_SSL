@@ -9,6 +9,10 @@ This client library makes it simple for ESP8266/NodeMCU devices to store time se
 
 ### Installing for the Arduino IDE
 
+- Use the Arduino library manager ("Tools" Menu) and search for "pushdata", then click to install
+
+Or alternatively :
+
 - Download the ZIP archive from the [latest release](https://github.com/pushdata-io/Arduino_ESP8266_SSL/releases/latest)
 
 - Open the Arduino IDE and click Sketch->Include Library->Add .ZIP library in the menu
